@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descarga Nuestras Fiestas Taurinas, la aplicación para consultar festejos taurinos de toda España.">
+  <meta name="theme-color" content="#8e1717">
+  <title>Nuestras Fiestas Taurinas</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f4ef;
+      color: #292929;
+    }
+
+    header {
+      background: #8e1717;
+      color: white;
+      text-align: center;
+      padding: 55px 20px 65px;
+      border-bottom: 5px solid #d5ad55;
+    }
+
+    .logo {
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 18px;
+      border: 3px solid #d5ad55;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 55px;
+      background: white;
+    }
+
+    header h1 {
+      font-size: 34px;
+      margin: 10px 0;
+    }
+
+    header p {
+      font-size: 17px;
+      margin: 12px 0 0;
+    }
+
+    main {
+      max-width: 850px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .panel {
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    h2 {
+      color: #8e1717;
+      margin-top: 0;
+    }
+
+    .version {
+      display: inline-block;
+      background: #f5ead2;
+      color: #725014;
+      padding: 8px 17px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 12px 0 22px;
+    }
+
+    .download {
+      display: inline-block;
+      background: #8e1717;
+      color: white;
+      text-decoration: none;
+      padding: 17px 32px;
+      border-radius: 8px;
+      font-size: 19px;
+      font-weight: bold;
+      margin: 10px 0;
+      transition: background 0.2s;
+    }
+
+    .download:hover {
+      background: #681010;
+    }
+
+    .small {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .instructions {
+      text-align: left;
+      margin-top: 35px;
+      line-height: 1.8;
+    }
+
+    .instructions h2 {
+      text-align: center;
+    }
+
+    .instructions li {
+      margin-bottom: 9px;
+    }
+
+    .updates {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f8f1e4;
+      border-left: 4px solid #d5ad55;
+      border-radius: 6px;
+      line-height: 1.6;
+    }
+
+    footer {
+      background: #292929;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+      margin-top: 45px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #e6c675;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 27px;
+      }
+
+      .panel {
+        padding: 23px 17px;
+      }
+
+      .download {
+        display: block;
+        padding: 17px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">🐂</div>
+    <h1>Nuestras Fiestas Taurinas</h1>
+    <p>Todos los festejos taurinos de España en tu móvil</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Descarga nuestra aplicación</h2>
+
+      <p>
+        Consulta los festejos taurinos de toda España,
+        organizados por comunidades autónomas,
+        provincias y localidades.
+      </p>
+
+      <div class="version">Versión actual: 1.0.0</div>
+
+      <br>
+
+      <a class="download"
+         href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases/latest/download/app-release.apk">
+        ⬇ DESCARGAR APLICACIÓN
+      </a>
+
+      <p class="small">Compatible con dispositivos Android</p>
+      <p class="small">Descarga gratuita · Archivo APK</p>
+    </section>
+
+    <section class="panel instructions" style="margin-top:25px">
+      <h2>¿Cómo instalar la aplicación?</h2>
+
+      <ol>
+        <li>Pulsa el botón de descarga.</li>
+        <li>Espera a que termine la descarga del archivo APK.</li>
+        <li>Abre el archivo descargado.</li>
+        <li>Si Android lo solicita, permite instalar aplicaciones desde esta fuente.</li>
+        <li>Pulsa en Instalar y disfruta de la aplicación.</li>
+      </ol>
+    </section>
+
+    <section class="updates">
+      <h2>Actualizaciones</h2>
+      Publicaremos aquí las nuevas versiones de la aplicación.
+      Cuando haya una actualización, podrás descargarla desde esta misma página.
+      <br><br>
+      <a href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases/latest">
+        Consultar todas las versiones
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Nuestras Fiestas Taurinas</strong></p>
+    <p>La afición taurina de toda España, en tu móvil.</p>
+    <p>© 2026 · Todos los derechos reservados</p>
+  </footer>
+
+</body>
+</html>
