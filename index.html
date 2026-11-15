@@ -87,13 +87,6 @@
       margin: 5px 0 18px;
     }
 
-    .status {
-      color: #397044;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 8px 0 15px;
-    }
-
     .download {
       display: inline-block;
       background: #8e1717;
@@ -138,23 +131,47 @@
       margin-bottom: 25px;
     }
 
-    .updates a,
-    .release-link {
-      color: #8e1717;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .updates a:hover,
-    .release-link:hover {
-      text-decoration: underline;
-    }
-
-    .release-notes {
+    .release-card {
       text-align: left;
-      line-height: 1.6;
+      border: 1px solid #e5ded3;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 18px;
+      background: #fff;
+    }
+
+    .release-card h3 {
+      margin: 0 0 8px;
+      color: #8e1717;
+      font-size: 19px;
+    }
+
+    .release-card .date {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .release-card .notes {
       white-space: pre-line;
-      margin: 15px 0;
+      line-height: 1.6;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .release-download {
+      display: inline-block;
+      background: #8e1717;
+      color: white;
+      text-decoration: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .release-download:hover {
+      background: #681010;
     }
 
     .loading {
@@ -164,7 +181,7 @@
 
     .error {
       color: #9a3333;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     footer {
@@ -198,6 +215,15 @@
         display: block;
         padding: 17px 12px;
       }
+
+      .release-card {
+        padding: 16px;
+      }
+
+      .release-download {
+        display: block;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -226,25 +252,23 @@
       </p>
 
       <div class="version" id="version">
-        Versión 1.0.0
+        Consultando versión...
       </div>
 
       <div class="release-date" id="releaseDate">
-        Consultando última publicación...
-      </div>
-
-      <div class="status" id="status">
-        Preparando descarga...
+        Consultando fecha de publicación...
       </div>
 
       <a class="download"
          id="downloadButton"
-         href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases/latest/download/app-release.apk">
+         href="#"
+         style="display:none">
         ⬇ DESCARGAR APLICACIÓN
       </a>
 
       <p class="small">Compatible con dispositivos Android</p>
       <p class="small">Descarga gratuita · Archivo APK</p>
+      <p id="downloadError" class="error"></p>
     </section>
 
     <section class="panel instructions">
@@ -263,36 +287,28 @@
       <h2>Actualizaciones</h2>
 
       <p>
-        Aquí encontrarás siempre la última versión disponible
-        de Nuestras Fiestas Taurinas.
+        Aquí encontrarás las nuevas versiones de
+        Nuestras Fiestas Taurinas.
       </p>
 
       <p>
-        Cuando publiquemos una nueva versión, la página mostrará
-        automáticamente su número y fecha de publicación.
+        Consulta las novedades y descarga la versión que quieras
+        directamente desde nuestra página.
       </p>
-
-      <a href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases">
-        Consultar todas las versiones
-      </a>
     </section>
 
     <section class="panel">
-      <h2>Última publicación</h2>
+      <h2>Versiones disponibles</h2>
 
-      <div id="releaseTitle" class="loading">
-        Consultando novedades...
+      <p class="small">
+        Historial de versiones y novedades de la aplicación.
+      </p>
+
+      <div id="releaseList" class="loading">
+        Cargando versiones disponibles...
       </div>
 
-      <div id="releaseNotes" class="release-notes"></div>
-
-      <a id="releaseLink"
-         class="release-link"
-         href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases">
-        Ver publicación en GitHub
-      </a>
-
-      <p id="apiError" class="error"></p>
+      <p id="historyError" class="error"></p>
     </section>
 
   </main>
@@ -307,66 +323,112 @@
     const repository =
       "https://api.github.com/repos/garbencan/descargas-nuestras-fiestas-taurinas";
 
-    async function loadLatestRelease() {
-      const version = document.getElementById("version");
-      const releaseDate = document.getElementById("releaseDate");
-      const releaseTitle = document.getElementById("releaseTitle");
-      const releaseNotes = document.getElementById("releaseNotes");
-      const releaseLink = document.getElementById("releaseLink");
-      const apiError = document.getElementById("apiError");
-      const status = document.getElementById("status");
+    function formatDate(dateString) {
+      if (!dateString) return "Fecha no disponible";
+
+      return new Date(dateString).toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    async function loadReleases() {
+      const versionElement = document.getElementById("version");
+      const dateElement = document.getElementById("releaseDate");
+      const downloadButton = document.getElementById("downloadButton");
+      const releaseList = document.getElementById("releaseList");
 
       try {
-        const response = await fetch(repository + "/releases/latest", {
+        const response = await fetch(repository + "/releases?per_page=100", {
           headers: {
             "Accept": "application/vnd.github+json"
           }
         });
 
         if (!response.ok) {
-          throw new Error("No se pudo consultar la última versión.");
+          throw new Error("No se pudieron consultar las versiones.");
         }
 
-        const release = await response.json();
+        const releases = await response.json();
 
-        const versionNumber = release.tag_name || "Sin versión";
-        const date = release.published_at
-          ? new Date(release.published_at).toLocaleDateString("es-ES", {
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            })
-          : "Fecha no disponible";
+        if (!Array.isArray(releases) || releases.length === 0) {
+          throw new Error("Todavía no hay versiones publicadas.");
+        }
 
-        version.textContent = "Versión " + versionNumber;
-        releaseDate.textContent = "Publicado el " + date;
-        releaseTitle.textContent = release.name || versionNumber;
+        const latest = releases[0];
 
-        releaseNotes.textContent =
-          release.body || "Consulta los detalles de esta publicación en GitHub.";
+        versionElement.textContent =
+          "Versión " + (latest.tag_name || "Disponible");
 
-        releaseLink.href = release.html_url;
+        dateElement.textContent =
+          "Publicado el " + formatDate(latest.published_at);
 
-        status.textContent = "✓ Última versión disponible";
-
-        const apk = (release.assets || []).find(asset =>
+        const latestApk = (latest.assets || []).find(asset =>
           asset.name.toLowerCase().endsWith(".apk")
         );
 
-        if (apk) {
-          document.getElementById("downloadButton").href =
-            apk.browser_download_url;
+        if (latestApk) {
+          downloadButton.href = latestApk.browser_download_url;
+          downloadButton.style.display = "inline-block";
+        } else {
+          document.getElementById("downloadError").textContent =
+            "La última publicación todavía no contiene una APK.";
         }
 
+        releaseList.innerHTML = "";
+
+        releases.forEach(release => {
+          const card = document.createElement("article");
+          card.className = "release-card";
+
+          const title = document.createElement("h3");
+          title.textContent = release.name || release.tag_name || "Versión";
+
+          const date = document.createElement("div");
+          date.className = "date";
+          date.textContent = "Publicado el " + formatDate(release.published_at);
+
+          const notes = document.createElement("div");
+          notes.className = "notes";
+          notes.textContent = release.body || "Sin notas de publicación.";
+
+          card.appendChild(title);
+          card.appendChild(date);
+          card.appendChild(notes);
+
+          const apk = (release.assets || []).find(asset =>
+            asset.name.toLowerCase().endsWith(".apk")
+          );
+
+          if (apk) {
+            const button = document.createElement("a");
+            button.className = "release-download";
+            button.href = apk.browser_download_url;
+            button.textContent = "⬇ Descargar " + (release.tag_name || "APK");
+            card.appendChild(button);
+          } else {
+            const unavailable = document.createElement("p");
+            unavailable.className = "small";
+            unavailable.textContent = "APK no disponible para esta versión.";
+            card.appendChild(unavailable);
+          }
+
+          releaseList.appendChild(card);
+        });
+
       } catch (error) {
-        status.textContent = "Descarga disponible";
-        apiError.textContent =
-          "No se ha podido actualizar la información automáticamente. Puedes consultar las versiones en GitHub.";
-        releaseTitle.textContent = "Nuestras Fiestas Taurinas";
+        versionElement.textContent = "Información no disponible";
+        dateElement.textContent = "";
+        releaseList.textContent =
+          "No se ha podido cargar el historial. Inténtalo de nuevo más tarde.";
+
+        document.getElementById("historyError").textContent =
+          "Comprueba tu conexión a Internet.";
       }
     }
 
-    loadLatestRelease();
+    loadReleases();
   </script>
 
 </body>
