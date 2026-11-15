@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Descarga Nuestras Fiestas Taurinas, la aplicación para consultar festejos taurinos de toda España.">
+  <meta name="description" content="Descarga Nuestras Fiestas Taurinas y consulta los festejos taurinos de toda España.">
   <meta name="theme-color" content="#8e1717">
 
   <title>Nuestras Fiestas Taurinas</title>
@@ -33,11 +33,6 @@
       width: 105px;
       height: 105px;
       margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      border: none;
     }
 
     .logo img {
@@ -68,6 +63,7 @@
       border-radius: 14px;
       box-shadow: 0 4px 18px rgba(0,0,0,0.08);
       text-align: center;
+      margin-bottom: 25px;
     }
 
     h2 {
@@ -79,10 +75,23 @@
       display: inline-block;
       background: #f5ead2;
       color: #725014;
-      padding: 8px 17px;
+      padding: 9px 18px;
       border-radius: 20px;
       font-weight: bold;
-      margin: 12px 0 22px;
+      margin: 12px 0 8px;
+    }
+
+    .release-date {
+      color: #777;
+      font-size: 14px;
+      margin: 5px 0 18px;
+    }
+
+    .status {
+      color: #397044;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 8px 0 15px;
     }
 
     .download {
@@ -109,7 +118,6 @@
 
     .instructions {
       text-align: left;
-      margin-top: 35px;
       line-height: 1.8;
     }
 
@@ -122,22 +130,41 @@
     }
 
     .updates {
-      margin-top: 25px;
-      padding: 20px;
       background: #f8f1e4;
       border-left: 4px solid #d5ad55;
       border-radius: 6px;
+      padding: 22px;
       line-height: 1.6;
+      margin-bottom: 25px;
     }
 
-    .updates a {
+    .updates a,
+    .release-link {
       color: #8e1717;
       font-weight: bold;
       text-decoration: none;
     }
 
-    .updates a:hover {
+    .updates a:hover,
+    .release-link:hover {
       text-decoration: underline;
+    }
+
+    .release-notes {
+      text-align: left;
+      line-height: 1.6;
+      white-space: pre-line;
+      margin: 15px 0;
+    }
+
+    .loading {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #9a3333;
+      font-size: 13px;
     }
 
     footer {
@@ -147,10 +174,6 @@
       padding: 25px 15px;
       margin-top: 45px;
       font-size: 14px;
-    }
-
-    footer a {
-      color: #e6c675;
     }
 
     @media (max-width: 600px) {
@@ -182,22 +205,18 @@
 <body>
 
   <header>
-
     <div class="logo">
       <img src="logo-nuestras-fiestas.png"
            alt="Logotipo de Nuestras Fiestas Taurinas">
     </div>
 
     <h1>Nuestras Fiestas Taurinas</h1>
-
     <p>Todos los festejos taurinos de España en tu móvil</p>
-
   </header>
 
   <main>
 
     <section class="panel">
-
       <h2>Descarga nuestra aplicación</h2>
 
       <p>
@@ -206,62 +225,149 @@
         provincias y localidades.
       </p>
 
-      <div class="version">
-        Versión actual: 1.0.0
+      <div class="version" id="version">
+        Versión 1.0.0
       </div>
 
-      <br>
+      <div class="release-date" id="releaseDate">
+        Consultando última publicación...
+      </div>
+
+      <div class="status" id="status">
+        Preparando descarga...
+      </div>
 
       <a class="download"
+         id="downloadButton"
          href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases/latest/download/app-release.apk">
         ⬇ DESCARGAR APLICACIÓN
       </a>
 
       <p class="small">Compatible con dispositivos Android</p>
       <p class="small">Descarga gratuita · Archivo APK</p>
-
     </section>
 
-    <section class="panel instructions" style="margin-top:25px">
-
+    <section class="panel instructions">
       <h2>¿Cómo instalar la aplicación?</h2>
 
       <ol>
         <li>Pulsa el botón de descarga.</li>
-        <li>Espera a que termine la descarga del archivo APK.</li>
+        <li>Espera a que termine de descargarse el archivo APK.</li>
         <li>Abre el archivo descargado.</li>
         <li>Si Android lo solicita, permite instalar aplicaciones desde esta fuente.</li>
         <li>Pulsa en Instalar y disfruta de la aplicación.</li>
       </ol>
-
     </section>
 
     <section class="updates">
-
       <h2>Actualizaciones</h2>
 
-      Publicaremos aquí las nuevas versiones de la aplicación.
-      Cuando haya una actualización, podrás descargarla desde esta misma página.
+      <p>
+        Aquí encontrarás siempre la última versión disponible
+        de Nuestras Fiestas Taurinas.
+      </p>
 
-      <br><br>
+      <p>
+        Cuando publiquemos una nueva versión, la página mostrará
+        automáticamente su número y fecha de publicación.
+      </p>
 
       <a href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases">
         Consultar todas las versiones
       </a>
+    </section>
 
+    <section class="panel">
+      <h2>Última publicación</h2>
+
+      <div id="releaseTitle" class="loading">
+        Consultando novedades...
+      </div>
+
+      <div id="releaseNotes" class="release-notes"></div>
+
+      <a id="releaseLink"
+         class="release-link"
+         href="https://github.com/garbencan/descargas-nuestras-fiestas-taurinas/releases">
+        Ver publicación en GitHub
+      </a>
+
+      <p id="apiError" class="error"></p>
     </section>
 
   </main>
 
   <footer>
-
     <p><strong>Nuestras Fiestas Taurinas</strong></p>
-
     <p>La afición taurina de toda España, en tu móvil.</p>
-
     <p>© 2026 · Todos los derechos reservados</p>
-
   </footer>
+
+  <script>
+    const repository =
+      "https://api.github.com/repos/garbencan/descargas-nuestras-fiestas-taurinas";
+
+    async function loadLatestRelease() {
+      const version = document.getElementById("version");
+      const releaseDate = document.getElementById("releaseDate");
+      const releaseTitle = document.getElementById("releaseTitle");
+      const releaseNotes = document.getElementById("releaseNotes");
+      const releaseLink = document.getElementById("releaseLink");
+      const apiError = document.getElementById("apiError");
+      const status = document.getElementById("status");
+
+      try {
+        const response = await fetch(repository + "/releases/latest", {
+          headers: {
+            "Accept": "application/vnd.github+json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("No se pudo consultar la última versión.");
+        }
+
+        const release = await response.json();
+
+        const versionNumber = release.tag_name || "Sin versión";
+        const date = release.published_at
+          ? new Date(release.published_at).toLocaleDateString("es-ES", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })
+          : "Fecha no disponible";
+
+        version.textContent = "Versión " + versionNumber;
+        releaseDate.textContent = "Publicado el " + date;
+        releaseTitle.textContent = release.name || versionNumber;
+
+        releaseNotes.textContent =
+          release.body || "Consulta los detalles de esta publicación en GitHub.";
+
+        releaseLink.href = release.html_url;
+
+        status.textContent = "✓ Última versión disponible";
+
+        const apk = (release.assets || []).find(asset =>
+          asset.name.toLowerCase().endsWith(".apk")
+        );
+
+        if (apk) {
+          document.getElementById("downloadButton").href =
+            apk.browser_download_url;
+        }
+
+      } catch (error) {
+        status.textContent = "Descarga disponible";
+        apiError.textContent =
+          "No se ha podido actualizar la información automáticamente. Puedes consultar las versiones en GitHub.";
+        releaseTitle.textContent = "Nuestras Fiestas Taurinas";
+      }
+    }
+
+    loadLatestRelease();
+  </script>
 
 </body>
 </html>
